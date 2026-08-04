@@ -1,0 +1,16 @@
+@BASE_URL = http://localhost:5000
+
+# @name Create a new task
+POST {{BASE_URL}}/task
+Content-Type: application/json
+
+{
+    "title": "Study HTML",
+    "description": "Tags and other specifications",
+    "status_id": 1,
+    "priority_id": 1,
+    "category_id": 1
+}
+
+###
+GET {{BASE_URL}}/tasks
