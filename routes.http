@@ -5,11 +5,11 @@ POST {{BASE_URL}}/task
 Content-Type: application/json
 
 {
-    "title": "Study HTML",
-    "description": "Tags and other specifications",
-    "status_id": 1,
-    "priority_id": 1,
-    "category_id": 1
+    "title": "Estudar HTML, CSS e JS",
+    "description": "Estudar os cenários das tags em HTML, CSS e JS",
+    "statusId": 1,
+    "priorityId": 2,
+    "categoryId": 1
 }
 
 ###

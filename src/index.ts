@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import { db } from "./database/connection";
+import { AddTaskInput, addTaskSchema } from "./schemas";
 
 const app = express();
 const PORT = 5000;
@@ -17,14 +19,27 @@ app.get("/healthy", (req, res) => {
     res.status(200).json({ message: "Server is healthy" });
 })
 
-app.post("/task", (req, res) => {
-    const { title, description, status_id, priority_id, category_id } = req.body;
+app.post("/task", async (req, res) => {
+    const { title, description, statusId, priorityId, categoryId } = req.body as AddTaskInput;
 
     // 1. Validar o body da requisição ( zod validação de entrada )
-    // 2. Insere no banco 
-    // 3. Retorna status 201, com as infomações criadas
+    const validatedData = addTaskSchema.safeParse({ title, description, statusId, priorityId, categoryId });
 
-    return res.status(201).json({ message: "Task created successfully", data: { title, description, status_id, priority_id, category_id } });
+    if (!validatedData.success) {
+        const errors = validatedData.error.issues.map((err) => ({
+            field: err.path[0],
+            message: err.message
+        }));
+
+        return res.status(400).json({ message: "Existem erros ao enviar sua requisição.", errors });
+    }
+
+
+    // 2. Insere no banco 
+    await db("tasks").insert({ title, description, status_id: statusId, priority_id: priorityId, category_id: categoryId });
+
+    // 3. Retorna status 201, com as infomações criadas
+    return res.status(201).json({ message: "Task criada com sucesso !", data: { title, description, statusId, priorityId, categoryId } });
 })
 
 app.get("/task/:id", (req, res) => {
